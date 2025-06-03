@@ -63,3 +63,22 @@ Thumbs.db
 # (e.g. “backend.tfvars”), you can add it here:
 # backend.tfvars
 
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+terraform.tfvars
+override.tf
+override.tf.json
+
+# Common
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+*.swp
+*~
