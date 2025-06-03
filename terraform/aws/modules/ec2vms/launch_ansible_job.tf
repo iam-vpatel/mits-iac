@@ -1,6 +1,6 @@
 # launch_ansible_job.tf
 
-# resource "null_resource" "launch_sminstall_job" {
+# resource "null_resource" "launch_swfinstall_job" {
 #   # Always re-run after any change to trigger a fresh job
 #   triggers = {
 #     always_run = timestamp()
@@ -8,7 +8,7 @@
 
 #   # Wait for all instances in this module to exist
 #   depends_on = [
-#     aws_instance.sminstall
+#     aws_instance.swfinstall
 #   ]
 
 #   provisioner "local-exec" {
