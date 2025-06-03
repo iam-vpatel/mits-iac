@@ -1,0 +1,32 @@
+# ---
+# - name: Install SFW
+#   hosts: role_SFW
+#   become: yes
+
+#   vars_files:
+#     - ../../../vault.yml      # loads ansible_controller_token & webex_bearer_token
+
+#   tasks:
+#     - name: Ping EC2 hosts
+#       ping:
+
+#     - name: Install required packages
+#       yum:
+#         name:
+#           - unzip
+#           - httpd
+#         state: present
+
+#     - name: Notify Webex (Success)
+#       uri:
+#         url: "https://webexapis.com/v1/messages"
+#         method: POST
+#         headers:
+#           Authorization: "Bearer {{ webex_bearer_token }}"
+#           Content-Type: "application/json"
+#         body: |
+#           {
+#             "roomId": "{{ lookup('env','WEBEX_ROOM_ID') }}",
+#             "text": "✅ SFW installed on {{ inventory_hostname }}"
+#           }
+#         body_format: json

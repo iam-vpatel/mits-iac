@@ -1,0 +1,2 @@
+
+variable "alert_email" {}

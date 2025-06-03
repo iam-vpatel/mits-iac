@@ -1,0 +1,3 @@
+bucket              = "mits-dev-terraform-state-bucket"
+dynamodb_table      = "mits-dev-terraform-state-lock"
+region              = "us-west-1"

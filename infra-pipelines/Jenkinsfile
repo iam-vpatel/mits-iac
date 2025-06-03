@@ -1,0 +1,57 @@
+pipeline {
+  agent any
+  environment {
+    AWS_CREDENTIALS = credentials('aws-poweruser') 
+    TF_VAR_ansible_repo = 'git@bitbucket.org:your_org/ec2vms-playbook.git'
+    TF_VAR_ansible_token = credentials('ansible-token')
+    TF_VAR_webex_token   = credentials('webex-token')
+    TF_VAR_webex_room_id = credentials('webex-room-id')
+  }
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+    stage('Terraform Init') {
+      steps {
+        dir('terraform/aws/modules/ec2vms/vmsinstall/dev') {
+          sh 'terraform init -backend-config=../../../backends/aws-aim/dev'
+        }
+      }
+    }
+    stage('Terraform Plan') {
+      steps {
+        dir('terraform/aws/modules/ec2vms/vmsinstall/dev') {
+          sh 'terraform plan -var-file=dev.tfvars -out=plan.out'
+        }
+      }
+    }
+    stage('Terraform Apply') {
+      steps {
+        dir('terraform/aws/modules/ec2vms/vmsinstall/dev') {
+          sh 'terraform apply -auto-approve plan.out'
+        }
+      }
+    }
+    // Optional drift detection
+    stage('Drift Detection') {
+      steps {
+        dir('terraform/aws/modules/ec2vms/vmsinstall/dev') {
+          script {
+            def rc = sh(script: 'terraform plan -detailed-exitcode -var-file=dev.tfvars || true', returnStatus: true)
+            if (rc == 2) {
+              error("⚠️ Drift detected in dev environment!")
+            }
+          }
+        }
+      }
+    }
+  }
+  post {
+    success {
+      echo '✔️ Deployment succeeded'
+    }
+    failure {
+      echo '❌ Deployment failed'
+    }
+  }
+}

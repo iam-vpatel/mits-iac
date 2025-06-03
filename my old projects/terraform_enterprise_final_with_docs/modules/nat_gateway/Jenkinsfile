@@ -1,0 +1,32 @@
+
+@Library('terraform-lib@main') _
+
+pipeline {
+  agent any
+  environment {
+    TF_IN_AUTOMATION = "true"
+  }
+  stages {
+    stage('Setup') {
+      steps {
+        script {
+          terraformSetup()
+        }
+      }
+    }
+    stage('Plan & Apply') {
+      steps {
+        script {
+          terraformPlanApply()
+        }
+      }
+    }
+  }
+  post {
+    failure {
+      script {
+        sendWebexNotification("Job Failed: ${env.JOB_NAME}")
+      }
+    }
+  }
+}

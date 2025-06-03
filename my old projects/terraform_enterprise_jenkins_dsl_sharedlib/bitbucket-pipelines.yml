@@ -1,0 +1,21 @@
+
+image: hashicorp/terraform:1.6.6
+
+pipelines:
+  default:
+    - step:
+        name: Terraform CI/CD
+        caches:
+          - terraform
+        script:
+          - terraform init
+          - terraform validate
+          - terraform plan
+          - terraform apply -auto-approve
+        services:
+          - docker
+
+definitions:
+  services:
+    docker:
+      memory: 1024

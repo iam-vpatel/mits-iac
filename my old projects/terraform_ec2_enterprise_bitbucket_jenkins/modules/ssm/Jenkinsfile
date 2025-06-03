@@ -1,0 +1,37 @@
+
+pipeline {
+  agent any
+  environment {
+    TF_IN_AUTOMATION = "true"
+  }
+  stages {
+    stage('Init') {
+      steps {
+        sh 'terraform init'
+      }
+    }
+    stage('Validate') {
+      steps {
+        sh 'terraform validate'
+      }
+    }
+    stage('Plan') {
+      steps {
+        sh 'terraform plan'
+      }
+    }
+    stage('Apply') {
+      steps {
+        input message: "Approve to apply?"
+        sh 'terraform apply -auto-approve'
+      }
+    }
+  }
+  post {
+    failure {
+      mail to: 'devops-team@example.com',
+           subject: "Terraform Job Failed: ${env.JOB_NAME}",
+           body: "Check Jenkins logs for more details."
+    }
+  }
+}
